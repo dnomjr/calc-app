@@ -1,0 +1,17 @@
+{
+  "name": "calculator-app",
+  "version": "1.0.0",
+  "description": "![Design preview for the Calculator app coding challenge](./design/desktop-preview.jpg)",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mathjs": "^13.0.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0"
+  }
+}

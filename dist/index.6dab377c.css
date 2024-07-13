@@ -1,0 +1,34 @@
+:root {
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%;
+}
+
+h1, h2, h3, h4, h5, figure, p, ol, ul {
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+img, picture, video, canvas, svg {
+  max-inline-size: 100%;
+  display: block;
+}
+
+a, a:active, a:visited {
+  text-decoration: none;
+}
+/*# sourceMappingURL=index.6dab377c.css.map */

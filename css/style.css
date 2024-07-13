@@ -1,0 +1,184 @@
+:root {
+  /* FONT */
+  --main-font: 'League Spartan', sans-serif;
+  --weight-font: 700;
+  --display-font-size-big: clamp(16px, 16px + 1.9vw, 44px);
+  --display-font-size-small: clamp(16px, 16px + 0.85vw, 28px);
+  --numbers--font-size: 32px;
+
+  /* BACKGROUNDS */
+  --theme-main-bg: hsl(222, 26%, 31%);
+  --theme-calc-bg: hsl(223, 31%, 20%);
+  --theme-display-bg: hsl(224, 36%, 15%);
+
+  /* BUTTONS */
+  --theme-button-dark-bg: hsl(225, 21%, 49%);
+  --theme-button-dark-shadow: hsl(224, 28%, 35%);
+  --theme-button-red-bg: hsl(6, 63%, 50%);
+  --theme-button-red-shadow: hsl(6, 70%, 34%);
+  --theme-button-light-bg: hsl(30, 25%, 89%);
+  --theme-button-light-shadow: hsl(28, 16%, 65%);
+
+  --hover-bg-numbers: hsl(0, 0%, 100%);
+  --hover-bg-del-reset: hsl(225, 42%, 65%);
+  --hover-bg-result: lightcoral;
+
+  /* TEXT */
+  --theme-text-dark: hsl(221, 14%, 31%);
+  --theme-text-light: hsl(0, 0%, 100%);
+  --theme-text-screen-logo: hsl(0, 0%, 100%);
+  --theme-text-result: hsl(0, 0%, 100%);
+}
+
+body {
+  min-height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--theme-main-bg);
+  font-family: var(--main-font);
+  font-weight: var(--weight-font);
+  transition: all 400ms ease-in-out;
+}
+
+.load {
+  display: flex;
+}
+
+.app {
+  margin: 0 20px 0 20px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  color: var(--theme-text-screen-logo);
+  transition: all 400ms ease-in-out;
+}
+
+.header__logo {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.header__theme {
+  display: flex;
+  align-items: end;
+  gap: 30px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.header__theme p {
+  margin-bottom: 2px;
+}
+
+.header__theme div p {
+  text-align: center;
+  word-spacing: 10px;
+}
+
+.header__theme div div {
+  width: 65px;
+  background-color: var(--theme-calc-bg);
+  border-radius: 15px;
+  /* JS - start, center, end */
+}
+
+.header__theme button {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background-color: var(--theme-button-red-bg);
+  border: none;
+  vertical-align: middle;
+  margin: 5px 6px;
+  transition: all 400ms ease-in-out;
+  cursor: pointer;
+  transform: translateX(0); /* 125%, 250% */
+}
+.header__theme button:hover {
+  background-color: lightcoral;
+}
+
+/* DISPLAY */
+.calculator {
+  margin-top: 25px;
+}
+
+.calculator__display {
+  padding: 30px;
+  background-color: var(--theme-display-bg);
+  border-radius: 8px;
+  line-height: 1;
+  text-align: end;
+  font-size: var(--display-font-size-big);
+  color: var(--theme-text-screen-logo);
+  transition: all 400ms ease-in-out;
+}
+
+.calculator__display p:last-child {
+  font-size: var(--display-font-size-small);
+  opacity: 20%;
+  display: none;
+}
+
+/* CALC BUTTONS */
+.calculator__buttons {
+  transition: all 400ms ease-in-out;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 20px;
+  padding: 25px;
+  background-color: var(--theme-calc-bg);
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+input[type='button'],
+.calculator__buttons button {
+  padding: 0 10px;
+  height: 50px;
+  line-height: 50px;
+  font-family: var(--main-font);
+  font-size: var(--numbers--font-size);
+  font-weight: var(--weight-font);
+  color: var(--theme-text-dark);
+  background-color: var(--theme-button-light-bg);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 5px var(--theme-button-light-shadow);
+  transition: all 400ms ease-in-out;
+}
+input[type='button']:hover {
+  background-color: var(--hover-bg-numbers);
+}
+
+input[value='RESET'] {
+  grid-column: 1/3;
+}
+.calculator__buttons button {
+  grid-column: 3/5;
+  background-color: var(--theme-button-red-bg);
+  color: var(--theme-text-result);
+  box-shadow: 0 5px var(--theme-button-red-shadow);
+}
+.calculator__buttons button:hover {
+  background-color: var(--hover-bg-result);
+}
+input[value='RESET'],
+input[value='DEL'] {
+  background-color: var(--theme-button-dark-bg);
+  color: var(--theme-text-light);
+  box-shadow: 0 5px var(--theme-button-dark-shadow);
+  font-size: clamp(10px, 10px + 2vw, 32px);
+}
+input[value='RESET']:hover,
+input[value='DEL']:hover {
+  background-color: var(--hover-bg-del-reset);
+}

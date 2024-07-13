@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>Calculator app</title>
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <section class="header">
+        <div class="header__logo">
+          <h1>calc</h1>
+        </div>
+        <div class="header__theme">
+          <p>theme</p>
+          <div>
+            <p>1 2 3</p>
+            <div><button aria-label="Toggle"></button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="calculator">
+        <form>
+          <!-- <output class="calculation__scrren">999999999999999</output> -->
+          <div class="calculator__display">
+            <p>0</p>
+            <p class="result">= 0</p>
+          </div>
+
+          <div class="calculator__buttons">
+            <input type="button" value="7" id="number" />
+            <input type="button" value="8" id="number" />
+            <input type="button" value="9" id="number" />
+            <input type="button" value="DEL" class="control" />
+            <input type="button" value="4" id="number" />
+            <input type="button" value="5" id="number" />
+            <input type="button" value="6" id="number" />
+            <input type="button" value="+" id="" class="operator" />
+            <input type="button" value="1" id="number" />
+            <input type="button" value="2" id="number" />
+            <input type="button" value="3" id="number" />
+            <input type="button" value="-" id="number" class="operator" />
+            <input type="button" value="." id="number" />
+            <input type="button" value="0" id="number" />
+            <input type="button" value="/" id="" class="operator" />
+            <input type="button" value="x" id="" class="operator" />
+            <input type="button" value="RESET" class="control" />
+            <button>=</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
