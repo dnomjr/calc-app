@@ -1,7 +1,7 @@
 :root {
   --main-font: "League Spartan", sans-serif;
   --weight-font: 700;
-  --display-font-size-big: clamp(16px, 16px + 1.9vw, 44px);
+  --display-font-size-big: clamp(36px, 16px + 1.9vw, 44px);
   --display-font-size-small: clamp(16px, 16px + .85vw, 28px);
   --numbers--font-size: 32px;
   --theme-main-bg: #3a4764;
@@ -38,6 +38,7 @@ body {
 }
 
 .app {
+  width: 425px;
   margin: 0 20px;
 }
 
@@ -102,7 +103,7 @@ body {
 .calculator__display {
   background-color: var(--theme-display-bg);
   text-align: end;
-  line-height: 1;
+  line-height: 44px;
   font-size: var(--display-font-size-big);
   color: var(--theme-text-screen-logo);
   border-radius: 8px;
@@ -110,10 +111,18 @@ body {
   transition: all .4s ease-in-out;
 }
 
+.calculator__display p {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.calculator__display P::-webkit-scrollbar {
+  display: none;
+}
+
 .calculator__display p:last-child {
   font-size: var(--display-font-size-small);
   opacity: .2;
-  display: none;
 }
 
 .calculator__buttons {

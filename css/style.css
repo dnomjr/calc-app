@@ -2,7 +2,7 @@
   /* FONT */
   --main-font: 'League Spartan', sans-serif;
   --weight-font: 700;
-  --display-font-size-big: clamp(16px, 16px + 1.9vw, 44px);
+  --display-font-size-big: clamp(36px, 16px + 1.9vw, 44px);
   --display-font-size-small: clamp(16px, 16px + 0.85vw, 28px);
   --numbers--font-size: 32px;
 
@@ -47,6 +47,7 @@ body {
 
 .app {
   margin: 0 20px 0 20px;
+  width: 425px;
 }
 
 /* HEADER */
@@ -113,17 +114,24 @@ body {
   padding: 30px;
   background-color: var(--theme-display-bg);
   border-radius: 8px;
-  line-height: 1;
+  line-height: 44px;
   text-align: end;
   font-size: var(--display-font-size-big);
   color: var(--theme-text-screen-logo);
   transition: all 400ms ease-in-out;
 }
+.calculator__display p {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.calculator__display P::-webkit-scrollbar {
+  display: none;
+}
 
 .calculator__display p:last-child {
   font-size: var(--display-font-size-small);
   opacity: 20%;
-  display: none;
 }
 
 /* CALC BUTTONS */

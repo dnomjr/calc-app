@@ -585,96 +585,100 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 
 },{}],"5AKj5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-/* if (module.hot) {
-  module.hot.accept()
-} */ var _configJs = require("./config.js");
+var _configJs = require("./config.js");
 var _configJsDefault = parcelHelpers.interopDefault(_configJs);
 var _mathjs = require("mathjs");
 "use strict";
+if (module.hot) module.hot.accept();
 const btnToggle = document.querySelector(".header__theme button");
+const deleteBtns = document.querySelectorAll(".control");
+const numbers = document.querySelectorAll("#number");
+const operators = document.querySelectorAll(".operator");
+const form = document.querySelector(".calculator form");
+const calc = document.querySelector(".calculator__display p:first-child");
 const root = document.documentElement;
-/*** TOGGLE THEME & SET STORAGE ***/ let themeNumber = 0;
-const setStorage = function(num) {
+let themeNum = 0;
+let actualNumber = "";
+let result = "";
+/*** TOGGLE THEME & SET STORAGE ***/ const setStorage = function(num) {
     localStorage.setItem("theme", JSON.stringify(num));
 };
-const setBtnPosition = function(num) {
-    btnToggle.style.transform = `translateX(${num * 125}%)`;
-    setStorage(num);
-};
-const setCustomVariable = function(themeNum) {
-    const theme = (0, _configJsDefault.default)[themeNum];
+const setCustomVariable = function(num) {
+    const theme = (0, _configJsDefault.default)[num];
     Object.keys(theme).forEach(function(variableName) {
         root.style.setProperty(variableName, theme[variableName]);
     });
-    setBtnPosition(themeNum);
 };
-const toggleBtn = function() {
-    themeNumber = (themeNumber + 1) % (0, _configJsDefault.default).length;
-    setCustomVariable(themeNumber);
+const setTheme = function() {
+    themeNum = (themeNum + 1) % (0, _configJsDefault.default).length;
+    btnToggle.style.transform = `translateX(${themeNum * 125}%)`;
+    setCustomVariable(themeNum);
+    setStorage(themeNum);
 };
 const getStorage = function() {
     const theme = JSON.parse(localStorage.getItem("theme"));
     document.body.classList.add("load");
     if (!theme) return;
-    setCustomVariable(theme);
+    themeNum = theme - 1;
+    setTheme();
 };
-document.addEventListener("DOMContentLoaded", getStorage);
-btnToggle.addEventListener("click", toggleBtn);
-/*** MAIN FUNCTIONALITY ***/ let actualNumber = "";
-let arrNumbers = [];
-const numbers = document.querySelectorAll("#number");
-const operators = document.querySelectorAll(".operator");
-const result = document.querySelector(".calculator form");
-let calc = document.querySelector(".calculator__display p:first-child");
-const checkNumber = function(value) {
-    return value === "." && actualNumber.includes(".") || value === "." && actualNumber.startsWith("-") && actualNumber.length === 1 || value === "-" && actualNumber.startsWith("-") || value === "-" && actualNumber !== "" || value === "0" && actualNumber.startsWith("0") && actualNumber.length < 2 || value === "-" && (calc.textContent.at(-1) === "-" || calc.textContent.at(-1) === "+") || value === "-" && (calc.textContent.at(-1) === "/" || calc.textContent.at(-1) === "x");
+/*** MAIN FUNCTIONALITY ***/ const setScroll = function() {
+    calc.scrollLeft = calc.scrollWidth;
 };
-const getNumber = function(e) {
+const validateNumber = function(value) {
+    let dot = value === ".";
+    let minus = value === "-";
+    return dot && [
+        "-",
+        "+",
+        "/",
+        "x"
+    ].includes(calc.textContent.at(-1)) || dot && actualNumber.includes(".") || dot && actualNumber.startsWith("-") && actualNumber.length === 1 || minus && actualNumber.startsWith("-") || minus && actualNumber !== "" || minus && [
+        "-",
+        "+",
+        "/",
+        "x"
+    ].includes(calc.textContent.at(-1)) || value === "0" && actualNumber.startsWith("0") && actualNumber.length < 2;
+};
+const validateDot = function(value) {
+    const dot = value === ".";
+    return dot && actualNumber === "" || dot && result || dot && calc.textContent === "0";
+};
+const setNumber = function(e) {
     const value = e.target.value;
-    if (value === "." && actualNumber === "") {
+    if (Number.isNaN(+result)) calc.style.fontSize = "clamp(36px, 16px + 1.9vw, 44px)";
+    if (validateNumber(value)) return;
+    if (validateDot(value)) {
         actualNumber = "0" + value;
-        calc.textContent = "0" + value;
+        calc.textContent = actualNumber;
+        result = "";
         return;
     }
-    if (calc.textContent === "0") {
-        actualNumber += value;
-        calc.textContent = value;
-        return;
-    }
-    if (checkNumber(value)) return;
+    if (result) calc.textContent = actualNumber = result = "";
     actualNumber += value;
-    calc.textContent += value;
+    calc.textContent = calc.textContent === "0" ? value : calc.textContent + value;
+    setScroll();
 };
-numbers.forEach(function(numb) {
-    numb.addEventListener("click", getNumber);
-});
-const makeCalc = function(e) {
+const setOperator = function(e) {
     const value = e.target.value;
     if (actualNumber.at(-1) === ".") return;
     if (calc.textContent.length === 1 && calc.textContent.startsWith("-")) return;
+    if (value === "-" && calc.textContent.at(-1) === "+") return;
     if (actualNumber) {
         calc.textContent += value;
         actualNumber = "";
     }
-    if (value === "-" && calc.textContent.at(-1) === "+") return;
+    if (result) result = "";
+    setScroll();
 };
-operators.forEach(function(c) {
-    c.addEventListener("click", makeCalc);
-});
-result.addEventListener("submit", function(e) {
-    e.preventDefault();
-    if (Number.isNaN(+calc.textContent.at(-1))) return;
-    calc.textContent = (0, _mathjs.evaluate)(calc.textContent);
-});
-document.querySelectorAll(".control").forEach(function(c) {
+const deleteResetCalc = function(c) {
     c.addEventListener("click", function() {
         let lastChar = calc.textContent.slice(-1);
         if (c.value === "RESET") {
             actualNumber = "";
             calc.textContent = "0";
-            console.clear();
         } else if (c.value === "DEL") {
-            if (calc.textContent.length === 1) {
+            if (calc.textContent.length === 1 && !result) {
                 actualNumber = "";
                 calc.textContent = "0";
                 return;
@@ -685,12 +689,45 @@ document.querySelectorAll(".control").forEach(function(c) {
                 actualNumber = matches[2] || matches[1];
                 return;
             }
+            if (result) {
+                actualNumber = calc.textContent.slice(0, -1);
+                calc.textContent = actualNumber;
+                result = "";
+                console.log(result, calc.textContent, actualNumber);
+                return;
+            }
             actualNumber = actualNumber.slice(0, -1);
             calc.textContent = calc.textContent.slice(0, -1);
-            console.log(calc.textContent, actualNumber);
         }
     });
+};
+const formatResult = function(res) {
+    if (res.includes(".")) {
+        let decimalPart = res.split(".")[1];
+        if (decimalPart.length > 4) return Number(res).toFixed(5);
+    }
+    if (Number.isNaN(+res) || !isFinite(+res)) {
+        calc.style.fontSize = "clamp(16px, 16px + 0.85vw, 28px)";
+        return "Division by 0 is not allowed";
+    }
+    return res;
+};
+const getResult = function(e) {
+    e.preventDefault();
+    if (Number.isNaN(+calc.textContent.at(-1))) return;
+    result = formatResult((0, _mathjs.evaluate)(calc.textContent).toString());
+    calc.textContent = result;
+};
+numbers.forEach(function(numb) {
+    numb.addEventListener("click", setNumber);
 });
+operators.forEach(function(op) {
+    op.addEventListener("click", setOperator);
+});
+deleteBtns.forEach(deleteResetCalc);
+form.addEventListener("submit", getResult);
+btnToggle.addEventListener("click", setTheme);
+document.addEventListener("DOMContentLoaded", getStorage);
 
 },{"./config.js":"4Wc5b","mathjs":"fbtFx","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
