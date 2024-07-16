@@ -80,6 +80,8 @@ const validateOperator = function (value) {
 
 const setNumber = function (e) {
   const value = e.target.value || e.key
+  console.log(value)
+
   if (Number.isNaN(+result)) {
     calc.style.fontSize = 'clamp(36px, 16px + 1.9vw, 44px)'
   }
@@ -97,7 +99,8 @@ const setNumber = function (e) {
   setScroll()
 }
 const setOperator = function (e) {
-  const value = e.target.value || e.key === '*' ? 'x' : e.key
+  const value = e.target.value || (e.key === '*' ? 'x' : e.key)
+  console.log(value)
   if (validateOperator(value)) return
 
   if (actualNumber) {
