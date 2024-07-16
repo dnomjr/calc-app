@@ -74,7 +74,9 @@ const validateOperator = function (value) {
     actualNumber.at(-1) === '.' ||
     (calc.textContent.length === 1 && calc.textContent.startsWith('-')) ||
     (value === '-' && calc.textContent.at(-1) === '+') ||
-    (value === '-' && actualNumber.startsWith('-') && actualNumber.length < 2)
+    (['-', '+', '/', 'x', '*'].includes(value) &&
+      actualNumber.startsWith('-') &&
+      actualNumber.length < 2)
   )
 }
 
