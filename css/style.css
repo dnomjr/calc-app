@@ -85,7 +85,6 @@ body {
   width: 65px;
   background-color: var(--theme-calc-bg);
   border-radius: 15px;
-  /* JS - start, center, end */
 }
 
 .header__theme button {
