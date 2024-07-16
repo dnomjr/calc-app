@@ -1,7 +1,4 @@
 'use strict'
-if (module.hot) {
-  module.hot.accept()
-}
 
 import themes from './config.js'
 import { evaluate } from 'mathjs'
@@ -106,53 +103,66 @@ const setOperator = function (e) {
   if (result) result = ''
   setScroll()
 }
-const deleteResetCalc = function (c) {
-  c.addEventListener('click', function () {
-    let lastChar = calc.textContent.slice(-1)
 
-    if (c.value === 'RESET') {
-      actualNumber = ''
-      calc.textContent = '0'
-    } else if (c.value === 'DEL') {
-      if (calc.textContent.length === 1 && !result) {
-        actualNumber = ''
-        calc.textContent = '0'
-        return
-      }
-      if ('-+/*x'.includes(lastChar)) {
-        calc.textContent = calc.textContent.slice(0, -1)
-        let matches = calc.textContent.match(/(\d+)(?:[^\d]+(\d+)$|$)/)
-        actualNumber = matches[2] || matches[1]
-        return
-      }
-      if (result) {
-        actualNumber = calc.textContent.slice(0, -1)
-        calc.textContent = actualNumber
-        result = ''
-        console.log(result, calc.textContent, actualNumber)
-        return
-      }
+/*** DELETE CHAR & RESET CALC  ***/
+const resetChars = function () {
+  actualNumber = ''
+  calc.textContent = '0'
+}
+const deleteChar = function () {
+  calc.textContent = calc.textContent.slice(0, -1)
+  let matches = calc.textContent.match(/(\d+)(?:[^\d]+(\d+)$|$)/)
+  actualNumber = matches ? matches[2] || matches[1] : ''
+}
+const handleDeleteReset = function (e) {
+  let value = e.target.value
+  if (value === 'RESET') return resetChars()
 
-      actualNumber = actualNumber.slice(0, -1)
-      calc.textContent = calc.textContent.slice(0, -1)
-    }
-  })
+  if (value === 'DEL') {
+    if (calc.textContent.length === 1 && !result) return resetChars()
+    if (result) result = ''
+
+    return deleteChar()
+  }
+}
+
+/*** MAKE CALC & ROUND RESULT ***/
+const bigDecimalRound = function (decimal, split) {
+  let indexE = decimal.indexOf('e')
+  let decimalFixed = decimal.slice(0, indexE)
+
+  decimalFixed =
+    decimalFixed.length > 4 ? decimalFixed.slice(0, 5) : decimalFixed
+
+  return `${split[0]}.${decimalFixed}${decimal.slice(indexE)}`
+}
+const decimalRound = function (res) {
+  let splitDot = res.split('.')
+  let decimalPart = splitDot[1]
+
+  if (decimalPart.includes('e')) {
+    return bigDecimalRound(decimalPart, splitDot)
+  }
+  if (decimalPart.length > 4) return Number(res).toFixed(5)
 }
 const formatResult = function (res) {
   if (res.includes('.')) {
-    let decimalPart = res.split('.')[1]
-    if (decimalPart.length > 4) return Number(res).toFixed(5)
+    return decimalRound(res)
   }
 
   if (Number.isNaN(+res) || !isFinite(+res)) {
     calc.style.fontSize = 'clamp(16px, 16px + 0.85vw, 28px)'
     return 'Division by 0 is not allowed'
   }
+  console.log(res)
   return res
 }
 const getResult = function (e) {
   e.preventDefault()
-  if (Number.isNaN(+calc.textContent.at(-1))) return
+  let math = calc.textContent
+  if (Number.isNaN(+math.at(-1))) return
+
+  if (math.includes('x')) calc.textContent = math.replaceAll('x', '*')
 
   result = formatResult(evaluate(calc.textContent).toString())
   calc.textContent = result
@@ -164,7 +174,9 @@ numbers.forEach(function (numb) {
 operators.forEach(function (op) {
   op.addEventListener('click', setOperator)
 })
-deleteBtns.forEach(deleteResetCalc)
+deleteBtns.forEach(function (del) {
+  del.addEventListener('click', handleDeleteReset)
+})
 
 form.addEventListener('submit', getResult)
 btnToggle.addEventListener('click', setTheme)

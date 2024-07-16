@@ -132,6 +132,7 @@ body {
 .calculator__display p:last-child {
   font-size: var(--display-font-size-small);
   opacity: 20%;
+  display: none;
 }
 
 /* CALC BUTTONS */
