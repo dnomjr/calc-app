@@ -1,5 +1,6 @@
 'use strict'
 
+import 'core-js/actual'
 import themes from './config.js'
 import { evaluate } from 'mathjs'
 
