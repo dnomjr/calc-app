@@ -2,7 +2,7 @@
 
 import 'core-js/actual'
 import themes from './config.js'
-import { evaluate } from 'mathjs'
+import { evaluate, log } from 'mathjs'
 
 const btnToggle = document.querySelector('.header__theme button')
 const deleteBtns = document.querySelectorAll('.control')
@@ -57,7 +57,6 @@ const validateNumber = function (value) {
     (dot && actualNumber.startsWith('-') && actualNumber.length === 1) ||
     (minus && actualNumber.startsWith('-')) ||
     (minus && actualNumber !== '') ||
-    (minus && ['-', '+', '/', 'x'].includes(calc.textContent.at(-1))) ||
     (value === '0' && actualNumber.startsWith('0') && actualNumber.length < 2)
   )
 }
@@ -70,9 +69,17 @@ const validateDot = function (value) {
     (dot && calc.textContent === '0')
   )
 }
-const setNumber = function (e) {
-  const value = e.target.value
+const validateOperator = function (value) {
+  return (
+    actualNumber.at(-1) === '.' ||
+    (calc.textContent.length === 1 && calc.textContent.startsWith('-')) ||
+    (value === '-' && calc.textContent.at(-1) === '+') ||
+    (value === '-' && actualNumber.startsWith('-') && actualNumber.length < 2)
+  )
+}
 
+const setNumber = function (e) {
+  const value = e.target.value || e.key
   if (Number.isNaN(+result)) {
     calc.style.fontSize = 'clamp(36px, 16px + 1.9vw, 44px)'
   }
@@ -83,7 +90,6 @@ const setNumber = function (e) {
     result = ''
     return
   }
-
   if (result) calc.textContent = actualNumber = result = ''
 
   actualNumber += value
@@ -91,11 +97,8 @@ const setNumber = function (e) {
   setScroll()
 }
 const setOperator = function (e) {
-  const value = e.target.value
-
-  if (actualNumber.at(-1) === '.') return
-  if (calc.textContent.length === 1 && calc.textContent.startsWith('-')) return
-  if (value === '-' && calc.textContent.at(-1) === '+') return
+  const value = e.target.value || e.key === '*' ? 'x' : e.key
+  if (validateOperator(value)) return
 
   if (actualNumber) {
     calc.textContent += value
@@ -116,10 +119,10 @@ const deleteChar = function () {
   actualNumber = matches ? matches[2] || matches[1] : ''
 }
 const handleDeleteReset = function (e) {
-  let value = e.target.value
-  if (value === 'RESET') return resetChars()
+  let value = e.target.value || e.key
+  if (value === 'RESET' || value === 'Escape') return resetChars()
 
-  if (value === 'DEL') {
+  if (value === 'DEL' || value === 'Backspace') {
     if (calc.textContent.length === 1 && !result) return resetChars()
     if (result) result = ''
 
@@ -145,7 +148,9 @@ const decimalRound = function (res) {
     return bigDecimalRound(decimalPart, splitDot)
   }
   if (decimalPart.length > 4) return Number(res).toFixed(5)
+  return res
 }
+
 const formatResult = function (res) {
   if (res.includes('.')) {
     return decimalRound(res)
@@ -155,18 +160,27 @@ const formatResult = function (res) {
     calc.style.fontSize = 'clamp(16px, 16px + 0.85vw, 28px)'
     return 'Division by 0 is not allowed'
   }
-  console.log(res)
   return res
 }
 const getResult = function (e) {
   e.preventDefault()
-  let math = calc.textContent
+  const math = calc.textContent
   if (Number.isNaN(+math.at(-1))) return
 
   if (math.includes('x')) calc.textContent = math.replaceAll('x', '*')
 
   result = formatResult(evaluate(calc.textContent).toString())
   calc.textContent = result
+}
+
+const keyPress = function (e) {
+  e.preventDefault()
+  if (e.key === 'Escape' || e.key === 'Backspace') return handleDeleteReset(e)
+  if (Number.isFinite(+e.key) || e.key === '.' || e.key === '-') {
+    if (!validateNumber(e.key)) return setNumber(e)
+  }
+  if (['+', '-', '/', '*'].includes(e.key)) return setOperator(e)
+  if (e.key === 'Enter') return getResult(e)
 }
 
 numbers.forEach(function (numb) {
@@ -178,7 +192,7 @@ operators.forEach(function (op) {
 deleteBtns.forEach(function (del) {
   del.addEventListener('click', handleDeleteReset)
 })
-
 form.addEventListener('submit', getResult)
 btnToggle.addEventListener('click', setTheme)
 document.addEventListener('DOMContentLoaded', getStorage)
+window.addEventListener('keydown', keyPress)
