@@ -82,10 +82,11 @@ const validateOperator = function (value) {
 
 const setNumber = function (e) {
   const value = e.target.value || e.key
-  console.log(value)
 
   if (Number.isNaN(+result)) {
     calc.style.fontSize = 'clamp(36px, 16px + 1.9vw, 44px)'
+    result = ''
+    calc.textContent = value
   }
   if (validateNumber(value)) return
   if (validateDot(value)) {
@@ -102,9 +103,8 @@ const setNumber = function (e) {
 }
 const setOperator = function (e) {
   const value = e.target.value || (e.key === '*' ? 'x' : e.key)
-  console.log(value)
   if (validateOperator(value)) return
-
+  if (Number.isNaN(+result)) return
   if (actualNumber) {
     calc.textContent += value
     actualNumber = ''
