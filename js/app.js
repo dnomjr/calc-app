@@ -86,7 +86,8 @@ const setNumber = function (e) {
   if (Number.isNaN(+result)) {
     calc.style.fontSize = 'clamp(36px, 16px + 1.9vw, 44px)'
     result = ''
-    calc.textContent = value
+    actualNumber += value
+    return (calc.textContent = value)
   }
   if (validateNumber(value)) return
   if (validateDot(value)) {
@@ -125,9 +126,16 @@ const deleteChar = function () {
 }
 const handleDeleteReset = function (e) {
   let value = e.target.value || e.key
-  if (value === 'RESET' || value === 'Escape') return resetChars()
+  if (value === 'RESET' || value === 'Escape') {
+    if (Number.isNaN(+result)) {
+      calc.style.fontSize = 'clamp(36px, 16px + 1.9vw, 44px)'
+      result = ''
+    }
+    return resetChars()
+  }
 
   if (value === 'DEL' || value === 'Backspace') {
+    if (Number.isNaN(+result)) return
     if (calc.textContent.length === 1 && !result) return resetChars()
     if (result) result = ''
 
